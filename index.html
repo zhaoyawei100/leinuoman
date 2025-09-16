@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘雷诺曼 - 线上占卜</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A148C', // 深紫色
+                        secondary: '#FFD700', // 金色
+                        accent: '#8E24AA', // 亮紫色
+                        dark: '#1A0315', // 深色背景
+                        light: '#F3E5F5', // 浅色文本
+                    },
+                    fontFamily: {
+                        mystical: ['Garamond', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .card-shadow {
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+            }
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+            .card-flip {
+                transform-style: preserve-3d;
+                transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .card-flip.flipped {
+                transform: rotateY(180deg);
+            }
+            .card-front, .card-back {
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+            }
+            .card-back {
+                transform: rotateY(180deg);
+            }
+            .cross-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+                gap: 1rem;
+                justify-items: center;
+                align-items: center;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .cross-center {
+                grid-column: 2;
+                grid-row: 2;
+            }
+            .cross-top {
+                grid-column: 2;
+                grid-row: 1;
+            }
+            .cross-bottom {
+                grid-column: 2;
+                grid-row: 3;
+            }
+            .cross-left {
+                grid-column: 1;
+                grid-row: 2;
+            }
+            .cross-right {
+                grid-column: 3;
+                grid-row: 2;
+            }
+            .search-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .search-row {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                width: 100%;
+            }
+            .search-detailed-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+                gap: 1rem;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .grid-3x2-layout {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                gap: 1rem;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+            .grid-9-layout {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 1rem;
+                max-width: 800px; /* 缩小最大宽度以更好地居中 */
+                margin: 0 auto;
+                justify-items: center; /* 新增：使网格项水平居中 */
+            }
+            .grand-blueprint-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 1rem;
+            }
+            .blueprint-row {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            .blueprint-9x4-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                max-width: 1800px;
+                margin: 0 auto;
+                padding: 1rem;
+            }
+            .blueprint-9x4-row {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            .blueprint-final-row {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+            .blueprint-spacer {
+                grid-column: span 2;
+            }
+            /* 卡牌尺寸适配350×500图片比例 (7:10) */
+            .card-small {
+                width: 70px;
+                height: 100px;
+            }
+            .card-medium {
+                width: 105px;
+                height: 150px;
+            }
+            .card-large {
+                width: 140px;
+                height: 200px;
+            }
+            .card-tiny {
+                width: 63px;
+                height: 90px;
+            }
+            @media (min-width: 640px) {
+                .card-small {
+                    width: 84px;
+                    height: 120px;
+                }
+                .card-medium {
+                    width: 126px;
+                    height: 180px;
+                }
+                .card-large {
+                    width: 168px;
+                    height: 240px;
+                }
+                .card-tiny {
+                    width: 72px;
+                    height: 103px;
+                }
+            }
+            @media (min-width: 768px) {
+                .card-small {
+                    width: 105px;
+                    height: 150px;
+                }
+                .card-medium {
+                    width: 147px;
+                    height: 210px;
+                }
+                .card-large {
+                    width: 196px;
+                    height: 280px;
+                }
+                .card-tiny {
+                    width: 84px;
+                    height: 120px;
+                }
+            }
+            @media (min-width: 1024px) {
+                .card-large {
+                    width: 245px;
+                    height: 350px;
+                }
+            }
+            /* 二选一牌阵专用样式 - 横向排列 */
+            .choice-layout {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            .choice-row {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                gap: 2rem;
+                flex-wrap: wrap;
+            }
+            .choice-column {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                min-width: 240px;
+            }
+            .vs-separator {
+                font-size: 1.8rem;
+                color: #FFD700;
+                font-weight: bold;
+                padding: 0 1rem;
+                white-space: nowrap;
+            }
+            .choice-title {
+                text-align: center;
+                margin-bottom: 1rem;
+                font-size: 1.2rem;
+                color: #FFD700;
+                font-weight: bold;
+            }
+            .choice-cards {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-light bg-pattern min-h-screen">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 bg-primary/90 backdrop-blur-sm shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-star text-secondary text-2xl"></i>
+                <h1 class="text-xl md:text-2xl font-mystical font-bold text-secondary">神秘雷诺曼</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#home" class="hover:text-secondary transition-colors duration-300">首页</a>
+                <a href="#layouts" class="hover:text-secondary transition-colors duration-300">牌阵选择</a>
+                <a href="#about" class="hover:text-secondary transition-colors duration-300">关于雷诺曼</a>
+                <a href="#contact" class="hover:text-secondary transition-colors duration-300">联系解牌</a>
+            </nav>
+            <button class="md:hidden text-xl" id="mobileMenuBtn">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden bg-primary/95 backdrop-blur-md">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#home" class="py-2 hover:text-secondary transition-colors duration-300">首页</a>
+                <a href="#layouts" class="py-2 hover:text-secondary transition-colors duration-300">牌阵选择</a>
+                <a href="#about" class="py-2 hover:text-secondary transition-colors duration-300">关于雷诺曼</a>
+                <a href="#contact" class="py-2 hover:text-secondary transition-colors duration-300">联系解牌</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section id="home" class="relative py-16 md:py-24 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/30 to-dark z-0"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl md:text-5xl font-mystical font-bold mb-6 text-secondary text-shadow">
+                    雷诺曼占卜
+                </h2>
+                <p class="text-lg md:text-xl mb-8 leading-relaxed">
+                    探索未知，寻找答案。雷诺曼卡牌将为你揭示生活中的隐秘真相与未来可能。
+                </p>
+                <a href="#layouts" class="inline-block bg-secondary text-primary font-bold py-3 px-8 rounded-full hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300 shadow-lg">
+                    开始占卜 <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+        <!-- 装饰性卡牌 -->
+        <div class="absolute -bottom-10 -left-10 w-40 h-60 opacity-20 rotate-12 hidden md:block">
+            <img src="https://www.taluowa.com/lenormand/1.jpg" alt="装饰性卡牌" class="w-full h-full object-contain rounded">
+        </div>
+        <div class="absolute -top-10 -right-10 w-40 h-60 opacity-20 -rotate-12 hidden md:block">
+            <img src="https://www.taluowa.com/lenormand/2.jpg" alt="装饰性卡牌" class="w-full h-full object-contain rounded">
+        </div>
+    </section>
+
+    <!-- 牌阵选择区域 -->
+    <section id="layouts" class="py-16 bg-gradient-to-b from-dark to-primary/20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-3xl font-mystical font-bold mb-2 text-center text-secondary">选择牌阵</h2>
+            <p class="text-center mb-12 max-w-2xl mx-auto">不同的牌阵适用于不同的问题类型，请选择与你当前问题最匹配的牌阵</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 基础牌阵 -->
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <span class="font-bold">1</span>
+                        </div>
+                        <h3 class="text-xl font-bold">单张牌阵</h3>
+                    </div>
+                    <p class="text-light/80">适合快速解答简单问题，提供直接的指引和答案。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">简单问题</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <span class="font-bold">2</span>
+                        </div>
+                        <h3 class="text-xl font-bold">两张牌阵</h3>
+                    </div>
+                    <p class="text-light/80">展示问题的两个方面或发展的两个阶段，适合分析二元性问题。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">二元分析</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="3">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <span class="font-bold">3</span>
+                        </div>
+                        <h3 class="text-xl font-bold">三张牌阵</h3>
+                    </div>
+                    <p class="text-light/80">代表过去、现在和未来，适合了解事件的发展过程和趋势。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">时间线</span>
+                    </div>
+                </div>
+                
+                <!-- 中级牌阵 -->
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="3linear">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-arrows-h"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">三张线性牌阵</h3>
+                    </div>
+                    <p class="text-light/80">展示事件的起因、发展和结果，适合分析事情的来龙去脉。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">事件流程</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="5">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <span class="font-bold">5</span>
+                        </div>
+                        <h3 class="text-xl font-bold">五张牌阵</h3>
+                    </div>
+                    <p class="text-light/80">提供更详细的分析，涵盖问题的多个层面和影响因素。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">详细分析</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <span class="font-bold">6</span>
+                        </div>
+                        <h3 class="text-xl font-bold">6张牌阵(3×2)</h3>
+                    </div>
+                    <p class="text-light/80">两行三列布局，适合分析多因素影响的复杂问题。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">多维度分析</span>
+                    </div>
+                </div>
+                
+                <!-- 高级牌阵 -->
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="cross">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-cross"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">十字牌阵</h3>
+                    </div>
+                    <p class="text-light/80">中心牌代表问题核心，周围牌展示影响因素和发展方向。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">核心分析</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="9grid">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-th"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">九宫格牌阵</h3>
+                    </div>
+                    <p class="text-light/80">3×3网格布局，全面分析问题的各个方面和潜在发展。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">全面洞察</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="choice">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-balance-scale"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">二选一牌阵</h3>
+                    </div>
+                    <p class="text-light/80">比较两个选择的可能结果，帮助你做出更明智的决定。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">决策辅助</span>
+                    </div>
+                </div>
+                
+                <!-- 寻物牌阵 -->
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="search">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-search"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">寻物牌阵</h3>
+                    </div>
+                    <p class="text-light/80">专为寻找遗失物品设计，指示物品位置和寻找线索。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">基础寻物</span>
+                    </div>
+                </div>
+                
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="searchdetailed">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">寻物详细版</h3>
+                    </div>
+                    <p class="text-light/80">通过空间定位（上下左右前后中心）精确寻找失物。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">精确寻物</span>
+                    </div>
+                </div>
+                
+                <!-- 大蓝图牌阵 -->
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="blueprint">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-map"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">大蓝图牌阵 (8×4+4)</h3>
+                    </div>
+                    <p class="text-light/80">36张完整牌阵，前4行每行8张，最后一行4张，全面揭示生命各个领域。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">全景解析</span>
+                    </div>
+                </div>
+                
+                <!-- 新增9×4排列的大蓝图牌阵 -->
+                <div class="bg-primary/20 rounded-xl p-6 card-shadow hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer layout-card" data-layout="blueprint9x4">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-th-large"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">大蓝图牌阵 (9×4)</h3>
+                    </div>
+                    <p class="text-light/80">36张完整牌阵，分为4行每行9张，整齐排列展示生命全景。</p>
+                    <div class="mt-4 pt-4 border-t border-light/20">
+                        <span class="text-sm bg-secondary/20 text-secondary px-3 py-1 rounded-full">整齐布局</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 占卜区域 -->
+    <section id="reading" class="py-16 hidden">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-mystical font-bold mb-4 text-secondary" id="readingTitle">单张牌阵占卜</h2>
+                <p class="max-w-2xl mx-auto" id="readingDescription">请集中注意力在你的问题上，然后点击下方按钮抽取卡牌。</p>
+            </div>
+            
+            <div class="mb-8 text-center">
+                <button id="drawCardsBtn" class="bg-secondary text-primary font-bold py-3 px-8 rounded-full hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300 shadow-lg">
+                    <i class="fa fa-magic mr-2"></i> 抽取卡牌
+                </button>
+                <button id="resetBtn" class="ml-4 bg-transparent border border-light py-3 px-6 rounded-full hover:bg-light/10 transition-all duration-300">
+                    重新开始
+                </button>
+            </div>
+            
+            <!-- 牌阵容器 -->
+            <div id="cardsLayout" class="flex flex-wrap justify-center gap-4 md:gap-8 my-12">
+                <!-- 卡牌将通过JS动态生成 -->
+            </div>
+            
+            <!-- 解牌结果 -->
+            <div id="readingResult" class="max-w-3xl mx-auto mt-12 bg-primary/20 rounded-xl p-6 card-shadow hidden">
+                <h3 class="text-xl font-bold mb-4 text-secondary">解牌结果</h3>
+                <div id="interpretation" class="prose prose-invert max-w-none">
+                    <!-- 解牌内容将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 人工解牌提示 -->
+            <div class="text-center mt-10">
+                <p class="mb-4">需要更深入的解读？专业占卜师为你提供一对一解牌服务</p>
+                <a href="#contact" class="inline-block text-secondary hover:underline">
+                    联系人工解牌 <i class="fa fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于雷诺曼 -->
+    <section id="about" class="py-16 bg-gradient-to-b from-primary/20 to-dark">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-mystical font-bold mb-6 text-center text-secondary">关于雷诺曼卡牌</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <img src="https://fastly.picsum.photos/id/3/600/400.jpg?hmac=wWzXom-H_045Ld4ih968kqBa5NE90OJyD--W2O3a4G0" alt="雷诺曼卡牌示例" class="rounded-xl shadow-lg w-full h-auto object-contain">
+                    </div>
+                    <div>
+                        <p class="mb-4">雷诺曼卡牌是一种古老而精准的占卜工具，起源于19世纪的欧洲，由法国占卜师玛丽·安妮·阿德莱德·雷诺曼推广普及。</p>
+                        <p class="mb-4">标准的雷诺曼牌组包含36张卡牌，每张牌都有特定的象征意义，通过卡牌的组合和位置，可以解读出关于爱情、事业、健康等生活各方面的信息。</p>
+                        <p>与塔罗牌相比，雷诺曼卡牌的解读更为直接具体，更适合回答实际问题和提供明确指引。</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12">
+                    <h3 class="text-xl font-bold mb-4 text-secondary">占卜注意事项</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fa fa-star text-secondary mt-1 mr-2"></i>
+                            <span>保持专注和开放的心态，清晰地思考你的问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-star text-secondary mt-1 mr-2"></i>
+                            <span>同一问题不宜频繁占卜，建议至少间隔一周</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-star text-secondary mt-1 mr-2"></i>
+                            <span>占卜结果仅供参考，最终决策仍在于你自己</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-star text-secondary mt-1 mr-2"></i>
+                            <span>线上占卜为自动解读，如需深入分析可联系专业占卜师</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系解牌 -->
+    <section id="contact" class="py-16 bg-gradient-to-b from-dark to-primary/30">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-3xl font-mystical font-bold mb-2 text-center text-secondary">联系人工解牌</h2>
+            <p class="text-center mb-12 max-w-2xl mx-auto">如果需要更深入、个性化的解读，可以添加下方微信联系专业占卜师（六爻、梅花、塔罗、雷诺曼）</p>
+            
+            <div class="max-w-md mx-auto bg-primary/20 rounded-xl p-6 md:p-8 card-shadow">
+                <div class="text-center">
+                    <p class="mb-6">扫描下方二维码添加微信，获取专业解牌服务</p>
+                    <div class="bg-white p-4 inline-block rounded-lg mb-6">
+                        <!-- 微信二维码图片 -->
+                        <img src="https://foruda.gitee.com/images/1758034221441134703/a14330f8_16241910.png" alt="微信二维码，文字提示：扫一扫上面的二维码图案，加我为朋友" class="w-64 h-64 object-contain">
+                    </div>
+                    <p class="text-secondary font-bold">微信：goooood100</p>
+                    <p class="mt-4 text-sm text-light/70">工作时间：每天 9:00 - 21:00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-8 bg-primary/50">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <i class="fa fa-star text-secondary"></i>
+                    <h2 class="text-xl font-mystical font-bold text-secondary">神秘雷诺曼</h2>
+                </div>
+                <p class="text-sm text-light/70 mb-4">探索未知，寻找答案</p>
+                <div class="flex justify-center space-x-4 mb-6">
+                    <a href="#" class="text-light/70 hover:text-secondary transition-colors">
+                        <i class="fa fa-weibo"></i>
+                    </a>
+                    <a href="#" class="text-light/70 hover:text-secondary transition-colors">
+                        <i class="fa fa-wechat"></i>
+                    </a>
+                    <a href="#" class="text-light/70 hover:text-secondary transition-colors">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                </div>
+                <p class="text-xs text-light/50">免责声明：占卜结果仅供参考，不构成任何决策建议</p>
+                <p class="text-xs text-light/50 mt-2">© 2023 神秘雷诺曼 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 雷诺曼36张牌的定义，第17张为鹳鸟
+        const lenormandCards = [
+            { name: "骑士", meaning: "带来消息、行动、进展，通常与男性相关" },
+            { name: "幸运草", meaning: "好运、机会、意外的惊喜，短期的幸运" },
+            { name: "船", meaning: "旅行、变化、远距离、进出口、迁移" },
+            { name: "房子", meaning: "家、稳定、安全感、家庭、住所" },
+            { name: "树", meaning: "健康、成长、持久、根深蒂固、自然" },
+            { name: "云", meaning: "不确定性、困惑、忧虑、模糊不清" },
+            { name: "蛇", meaning: "欺骗、诱惑、危险、隐秘的敌人" },
+            { name: "棺材", meaning: "结束、死亡、损失、停滞、终结" },
+            { name: "花束", meaning: "礼物、美丽、赞赏、喜悦、社交" },
+            { name: "镰刀", meaning: "突然的变化、切割、决定、危险" },
+            { name: "鞭子", meaning: "冲突、重复、惩罚、争论、暴力" },
+            { name: "小鸟", meaning: "交流、对话、消息、八卦、忧虑" },
+            { name: "小孩", meaning: "新的开始、天真、小型的、需要照顾的" },
+            { name: "狐狸", meaning: "狡猾、策略、工作、欺骗、谨慎" },
+            { name: "熊", meaning: "力量、财富、保护、权威、固执" },
+            { name: "星星", meaning: "希望、灵感、精神指引、梦想、遥远" },
+            { name: "鹳鸟", meaning: "转变、迁移、成长、家庭变化、进步" }, // 第17张为鹳鸟
+            { name: "狗", meaning: "友谊、忠诚、帮助、伙伴、可靠" },
+            { name: "塔", meaning: "孤立、权威、机构、分离、高大" },
+            { name: "花园", meaning: "社交、公众、聚会、社区、可见性" },
+            { name: "山", meaning: "障碍、延迟、挑战、困难、遥远" },
+            { name: "路径", meaning: "选择、决定、交叉路口、可能性" },
+            { name: "老鼠", meaning: "损耗、焦虑、破坏、小偷、细微" },
+            { name: "爱心", meaning: "爱情、情感、热情、关系、吸引力" },
+            { name: "戒指", meaning: "承诺、合同、婚姻、循环、永恒" },
+            { name: "书", meaning: "秘密、知识、学习、教育、隐藏" },
+            { name: "信", meaning: "消息、通信、文件、信件、信息" },
+            { name: "男人", meaning: "男性、特定的男人、阳刚特质" },
+            { name: "女人", meaning: "女性、特定的女人、阴柔特质" },
+            { name: "百合花", meaning: "纯洁、灵性、谨慎、年长、高贵" },
+            { name: "太阳", meaning: "成功、幸福、温暖、显耀、积极" },
+            { name: "月亮", meaning: "直觉、情绪、潜意识、夜晚、变化" },
+            { name: "钥匙", meaning: "解决方案、机会、关键、开启、重要" },
+            { name: "鱼", meaning: "财富、流动、 abundance、直觉、不确定" },
+            { name: "锚", meaning: "稳定、安全、固定、可靠、持久" },
+            { name: "十字架", meaning: "负担、牺牲、灵性、责任、苦难" }
+        ];
+
+        // 卡牌图片地址数组（按顺序对应36张牌）
+        const cardImages = [
+            "https://www.taluowa.com/lenormand/1.jpg",
+            "https://www.taluowa.com/lenormand/2.jpg",
+            "https://www.taluowa.com/lenormand/3.jpg",
+            "https://www.taluowa.com/lenormand/4.jpg",
+            "https://www.taluowa.com/lenormand/5.jpg",
+            "https://www.taluowa.com/lenormand/6.jpg",
+            "https://www.taluowa.com/lenormand/7.jpg",
+            "https://www.taluowa.com/lenormand/8.jpg",
+            "https://www.taluowa.com/lenormand/9.jpg",
+            "https://www.taluowa.com/lenormand/10.jpg",
+            "https://www.taluowa.com/lenormand/11.jpg",
+            "https://www.taluowa.com/lenormand/12.jpg",
+            "https://www.taluowa.com/lenormand/13.jpg",
+            "https://www.taluowa.com/lenormand/14.jpg",
+            "https://www.taluowa.com/lenormand/15.jpg",
+            "https://www.taluowa.com/lenormand/16.jpg",
+            "https://www.taluowa.com/lenormand/17.jpg", // 鹳鸟
+            "https://www.taluowa.com/lenormand/18.jpg",
+            "https://www.taluowa.com/lenormand/19.jpg",
+            "https://www.taluowa.com/lenormand/20.jpg",
+            "https://www.taluowa.com/lenormand/21.jpg",
+            "https://www.taluowa.com/lenormand/22.jpg",
+            "https://www.taluowa.com/lenormand/23.jpg",
+            "https://www.taluowa.com/lenormand/24.jpg",
+            "https://www.taluowa.com/lenormand/25.jpg",
+            "https://www.taluowa.com/lenormand/26.jpg",
+            "https://www.taluowa.com/lenormand/27.jpg",
+            "https://www.taluowa.com/lenormand/28.jpg",
+            "https://www.taluowa.com/lenormand/29.jpg",
+            "https://www.taluowa.com/lenormand/30.jpg",
+            "https://www.taluowa.com/lenormand/31.jpg",
+            "https://www.taluowa.com/lenormand/32.jpg",
+            "https://www.taluowa.com/lenormand/33.jpg",
+            "https://www.taluowa.com/lenormand/34.jpg",
+            "https://www.taluowa.com/lenormand/35.jpg",
+            "https://www.taluowa.com/lenormand/36.jpg"
+        ];
+
+        // 大蓝图牌阵的宫位标签
+        const blueprintLabels = [
+            "第 1 宫：骑士",
+            "第 2 宫：四叶草",
+            "第 3 宫：船",
+            "第 4 宫：房屋",
+            "第 5 宫：树",
+            "第 6 宫：云",
+            "第 7 宫：蛇",
+            "第 8 宫：棺材",
+            "第 9 宫：花束",
+            "第 10 宫：镰刀",
+            "第 11 宫：鞭子",
+            "第 12 宫：鸟",
+            "第 13 宫：小孩",
+            "第 14 宫：狐狸",
+            "第 15 宫：熊",
+            "第 16 宫：星星",
+            "第 17 宫：鹳鸟",
+            "第 18 宫：狗",
+            "第 19 宫：塔",
+            "第 20 宫：花园",
+            "第 21 宫：山",
+            "第 22 宫：十字路口",
+            "第 23 宫：老鼠",
+            "第 24 宫：心",
+            "第 25 宫：戒指",
+            "第 26 宫：书籍",
+            "第 27 宫：信件",
+            "第 28 宫：男人",
+            "第 29 宫：女人",
+            "第 30 宫：百合",
+            "第 31 宫：太阳",
+            "第 32 宫：月亮",
+            "第 33 宫：钥匙",
+            "第 34 宫：鱼",
+            "第 35 宫：船锚",
+            "第 36 宫：十字架"
+        ];
+
+        // DOM元素
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const layoutCards = document.querySelectorAll('.layout-card');
+        const readingSection = document.getElementById('reading');
+        const cardsLayout = document.getElementById('cardsLayout');
+        const drawCardsBtn = document.getElementById('drawCardsBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const readingTitle = document.getElementById('readingTitle');
+        const readingDescription = document.getElementById('readingDescription');
+        const readingResult = document.getElementById('readingResult');
+        const interpretation = document.getElementById('interpretation');
+        
+        // 当前选择的牌阵
+        let currentLayout = '1';
+        
+        // 移动端菜单切换
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 选择牌阵
+        layoutCards.forEach(card => {
+            card.addEventListener('click', () => {
+                currentLayout = card.getAttribute('data-layout');
+                showReadingSection();
+                // 滚动到占卜区域
+                readingSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // 重置按钮
+        resetBtn.addEventListener('click', () => {
+            readingSection.classList.add('hidden');
+            cardsLayout.innerHTML = '';
+            readingResult.classList.add('hidden');
+        });
+        
+        // 抽取卡牌按钮
+        drawCardsBtn.addEventListener('click', drawCards);
+        
+        // 显示占卜区域
+        function showReadingSection() {
+            // 根据选择的牌阵设置标题和描述
+            switch(currentLayout) {
+                case '1':
+                    readingTitle.textContent = '单张牌阵占卜';
+                    readingDescription.textContent = '请集中注意力在你的问题上，这张牌将给你直接的指引。';
+                    break;
+                case '2':
+                    readingTitle.textContent = '两张牌阵占卜';
+                    readingDescription.textContent = '这两张牌将展示问题的两个方面或发展的不同可能性。';
+                    break;
+                case '3':
+                    readingTitle.textContent = '三张牌阵占卜';
+                    readingDescription.textContent = '这三张牌分别代表过去、现在和未来，揭示事件的发展脉络。';
+                    break;
+                case '3linear':
+                    readingTitle.textContent = '三张线性牌阵占卜';
+                    readingDescription.textContent = '这三张牌将展示事件的起因、发展过程和最终结果。';
+                    break;
+                case '5':
+                    readingTitle.textContent = '五张牌阵占卜';
+                    readingDescription.textContent = '这五张牌将从多个角度分析你的问题，提供全面的指引。';
+                    break;
+                case '6':
+                    readingTitle.textContent = '6张牌阵(3×2)占卜';
+                    readingDescription.textContent = '这个牌阵以两行三列布局，分析问题的多个维度和影响因素。';
+                    break;
+                case '9grid':
+                    readingTitle.textContent = '九宫格牌阵占卜';
+                    readingDescription.textContent = '3×3网格布局将全面展示问题的各个方面和潜在发展趋势。';
+                    break;
+                case 'cross':
+                    readingTitle.textContent = '十字牌阵占卜';
+                    readingDescription.textContent = '中心牌代表问题核心，周围牌展示影响因素和可能的发展方向。';
+                    break;
+                case 'choice':
+                    readingTitle.textContent = '二选一牌阵占卜';
+                    readingDescription.textContent = '请想清楚两个选择，牌阵将展示每个选择的可能结果。';
+                    break;
+                case 'blueprint':
+                    readingTitle.textContent = '大蓝图牌阵占卜 (8×4+4)';
+                    readingDescription.textContent = '36张固定宫位牌阵将全面揭示你生活各个领域的状况、挑战和机遇。';
+                    break;
+                case 'blueprint9x4':
+                    readingTitle.textContent = '大蓝图牌阵占卜 (9×4)';
+                    readingDescription.textContent = '36张固定宫位牌阵，以9×4整齐布局展示生命全景和各领域状况。';
+                    break;
+                case 'search':
+                    readingTitle.textContent = '寻物牌阵占卜';
+                    readingDescription.textContent = '请集中注意力在你遗失的物品上，这个牌阵将为你提供寻找线索。';
+                    break;
+                case 'searchdetailed':
+                    readingTitle.textContent = '寻物详细版占卜';
+                    readingDescription.textContent = '通过空间定位（上下左右前后中心）帮助你精确寻找遗失物品。';
+                    break;
+            }
+            
+            // 清空之前的卡牌和结果
+            cardsLayout.innerHTML = '';
+            readingResult.classList.add('hidden');
+            
+            // 显示占卜区域
+            readingSection.classList.remove('hidden');
+        }
+        
+        // 抽取卡牌 - 大蓝图牌阵保持固定标签，但牌面随机抽取
+        function drawCards() {
+            // 清空之前的卡牌和结果
+            cardsLayout.innerHTML = '';
+            readingResult.classList.add('hidden');
+            
+            // 根据不同牌阵生成不同数量和布局的卡牌
+            let cardsCount = 0;
+            let layoutClass = '';
+            let cardSizeClass = 'card-medium'; // 默认卡牌大小
+            let selectedIndices = [];
+            
+            switch(currentLayout) {
+                case '1':
+                    cardsCount = 1;
+                    layoutClass = 'justify-center';
+                    cardSizeClass = 'card-large';
+                    break;
+                case '2':
+                    cardsCount = 2;
+                    layoutClass = 'justify-center';
+                    break;
+                case '3':
+                    cardsCount = 3;
+                    layoutClass = 'justify-center';
+                    break;
+                case '3linear':
+                    cardsCount = 3;
+                    layoutClass = 'justify-center';
+                    break;
+                case '5':
+                    cardsCount = 5;
+                    layoutClass = 'justify-center';
+                    break;
+                case '6':
+                    cardsCount = 6;
+                    layoutClass = 'grid-3x2-layout';
+                    break;
+                case '9grid':
+                    cardsCount = 9;
+                    layoutClass = 'grid-9-layout';
+                    cardSizeClass = 'card-small';
+                    break;
+                case 'cross':
+                    cardsCount = 5; // 十字牌阵使用5张牌
+                    layoutClass = 'cross-layout';
+                    break;
+                case 'choice':
+                    cardsCount = 4; // 两个选择各两张牌
+                    layoutClass = 'choice-layout'; // 使用横向布局类
+                    break;
+                case 'blueprint':
+                    cardsCount = 36; // 大蓝图牌阵使用36张牌
+                    layoutClass = 'grand-blueprint-layout';
+                    cardSizeClass = 'card-small';
+                    break;
+                case 'blueprint9x4':
+                    cardsCount = 36; // 9×4大蓝图牌阵使用36张牌
+                    layoutClass = 'blueprint-9x4-layout';
+                    cardSizeClass = 'card-tiny'; // 使用更小的卡牌尺寸以适应9列布局
+                    break;
+                case 'search':
+                    cardsCount = 4; // 寻物牌阵使用4张牌
+                    layoutClass = 'search-layout';
+                    break;
+                case 'searchdetailed':
+                    cardsCount = 7; // 寻物详细版使用7张牌
+                    layoutClass = 'search-detailed-layout';
+                    break;
+            }
+            
+            // 为所有牌阵生成随机不重复的卡牌索引（包括大蓝图牌阵）
+            // 创建索引数组并打乱顺序
+            const indices = Array.from({length: 36}, (_, i) => i);
+            indices.sort(() => 0.5 - Math.random());
+            // 取前cardsCount个索引
+            selectedIndices = indices.slice(0, cardsCount);
+            
+            // 添加布局类
+            cardsLayout.className = `flex ${layoutClass} my-12`;
+            
+            // 创建卡牌元素
+            selectedIndices.forEach((cardIndex, displayIndex) => {
+                const card = lenormandCards[cardIndex];
+                
+                // 卡牌位置类
+                let positionClass = '';
+                if (currentLayout === 'cross') {
+                    switch(displayIndex) {
+                        case 0: positionClass = 'cross-center'; break;
+                        case 1: positionClass = 'cross-top'; break;
+                        case 2: positionClass = 'cross-bottom'; break;
+                        case 3: positionClass = 'cross-left'; break;
+                        case 4: positionClass = 'cross-right'; break;
+                    }
+                } else if (currentLayout === 'search') {
+                    // 寻物牌阵使用两行布局
+                    if (displayIndex < 2) {
+                        // 创建第一行容器（仅在displayIndex=0时）
+                        if (displayIndex === 0) {
+                            const row = document.createElement('div');
+                            row.className = 'search-row';
+                            cardsLayout.appendChild(row);
+                        }
+                        positionClass = '';
+                    } else {
+                        // 创建第二行容器（仅在displayIndex=2时）
+                        if (displayIndex === 2) {
+                            const row = document.createElement('div');
+                            row.className = 'search-row';
+                            cardsLayout.appendChild(row);
+                        }
+                        positionClass = '';
+                    }
+                } else if (currentLayout === 'searchdetailed') {
+                    // 寻物详细版位置
+                    switch(displayIndex) {
+                        case 0: positionClass = 'cross-center'; break;
+                        case 1: positionClass = 'cross-top'; break;
+                        case 2: positionClass = 'cross-bottom'; break;
+                        case 3: positionClass = 'cross-left'; break;
+                        case 4: positionClass = 'cross-right'; break;
+                        case 5: positionClass = 'col-start-1 row-start-1'; break;
+                        case 6: positionClass = 'col-start-3 row-start-3'; break;
+                    }
+                }
+                
+                // 卡牌标签
+                let label = '';
+                if (currentLayout === 'choice') {
+                    // 二选一牌阵的标签处理
+                    if (displayIndex === 0) {
+                        // 创建横向布局的主容器
+                        const mainRow = document.createElement('div');
+                        mainRow.className = 'choice-row';
+                        
+                        // 创建第一个选择的容器
+                        const option1 = document.createElement('div');
+                        option1.className = 'choice-column';
+                        option1.innerHTML = '<div class="choice-title">选择一</div><div class="choice-cards"></div>';
+                        
+                        // 创建VS分隔符
+                        const vsSeparator = document.createElement('div');
+                        vsSeparator.className = 'vs-separator';
+                        vsSeparator.innerHTML = '<i class="fa fa-vs"></i> VS <i class="fa fa-vs"></i>';
+                        
+                        // 创建第二个选择的容器
+                        const option2 = document.createElement('div');
+                        option2.className = 'choice-column';
+                        option2.innerHTML = '<div class="choice-title">选择二</div><div class="choice-cards"></div>';
+                        
+                        // 组合起来
+                        mainRow.appendChild(option1);
+                        mainRow.appendChild(vsSeparator);
+                        mainRow.appendChild(option2);
+                        cardsLayout.appendChild(mainRow);
+                    }
+                } else if (currentLayout === 'blueprint' || currentLayout === 'blueprint9x4') {
+                    // 大蓝图牌阵使用指定的宫位标签
+                    label = `<div class="text-center text-xs mb-1">${blueprintLabels[displayIndex]}</div>`;
+                } else if (currentLayout === '3') {
+                    const timeLabels = ['过去', '现在', '未来'];
+                    label = `<div class="text-center mb-2">${timeLabels[displayIndex]}</div>`;
+                } else if (currentLayout === '3linear') {
+                    const linearLabels = ['起因', '发展', '结果'];
+                    label = `<div class="text-center mb-2">${linearLabels[displayIndex]}</div>`;
+                } else if (currentLayout === '6') {
+                    const grid6Labels = [
+                        '环境因素', '内在因素', '外部影响',
+                        '挑战', '机遇', '可能结果'
+                    ];
+                    label = `<div class="text-center mb-2">${grid6Labels[displayIndex]}</div>`;
+                } else if (currentLayout === '9grid') {
+                    const grid9Labels = [
+                        '过去影响', '当前状况', '未来趋势',
+                        '挑战', '核心问题', '机遇',
+                        '外部因素', '内在因素', '可能结果'
+                    ];
+                    label = `<div class="text-center text-xs mb-1">${grid9Labels[displayIndex]}</div>`;
+                } else if (currentLayout === 'cross') {
+                    const crossLabels = ['核心问题', '上方影响', '下方基础', '左侧阻碍', '右侧机遇'];
+                    label = `<div class="text-center mb-2">${crossLabels[displayIndex]}</div>`;
+                } else if (currentLayout === 'search') {
+                    const searchLabels = ['物品状态', '大致位置', '相关线索', '找回可能性'];
+                    label = `<div class="text-center mb-2">${searchLabels[displayIndex]}</div>`;
+                } else if (currentLayout === 'searchdetailed') {
+                    const searchDetailedLabels = ['中心区域', '上方', '下方', '左侧', '右侧', '前方', '后方'];
+                    label = `<div class="text-center mb-2">${searchDetailedLabels[displayIndex]}</div>`;
+                }
+                
+                const cardElement = document.createElement('div');
+                cardElement.className = `card-container relative ${positionClass}`;
+                cardElement.innerHTML = `
+                    ${label}
+                    <div class="card-flip ${cardSizeClass} relative cursor-pointer" data-card-index="${displayIndex}">
+                        <!-- 卡牌正面（背面图） -->
+                        <div class="card-front absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center card-shadow">
+                            <div class="text-center p-1">
+                                <i class="fa fa-star text-secondary text-xl mb-1"></i>
+                                <p class="font-mystical text-secondary text-xs">雷诺曼</p>
+                            </div>
+                        </div>
+                        <!-- 卡牌背面（正面图） -->
+                        <div class="card-back absolute inset-0 bg-white rounded-lg overflow-hidden card-shadow">
+                            <div class="h-4/5 bg-gray-100">
+                                <img src="${cardImages[cardIndex]}" alt="${card.name}" class="w-full h-full object-contain">
+                            </div>
+                            <div class="h-1/5 bg-primary text-white flex items-center justify-center">
+                                <h3 class="font-bold text-xs md:text-sm">${card.name}</h3>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 处理不同大蓝图牌阵的布局
+                if (currentLayout === 'blueprint') {
+                    // 原始大蓝图牌阵：8×4+4布局
+                    if (displayIndex < 32) {
+                        const rowIndex = Math.floor(displayIndex / 8);
+                        // 只在每行第一个元素时创建行容器
+                        if (displayIndex % 8 === 0) {
+                            const row = document.createElement('div');
+                            row.className = 'blueprint-row';
+                            cardsLayout.appendChild(row);
+                        }
+                        // 添加到当前行
+                        const rows = cardsLayout.querySelectorAll('.blueprint-row');
+                        rows[rowIndex].appendChild(cardElement);
+                    } else {
+                        // 处理最后4张牌，创建专用容器
+                        if (displayIndex === 32) {
+                            const finalRow = document.createElement('div');
+                            finalRow.className = 'blueprint-final-row';
+                            cardsLayout.appendChild(finalRow);
+                        }
+                        // 添加到最后一行容器
+                        const finalRow = cardsLayout.querySelector('.blueprint-final-row');
+                        finalRow.appendChild(cardElement);
+                    }
+                } else if (currentLayout === 'blueprint9x4') {
+                    // 新增9×4排列的大蓝图牌阵
+                    const rowIndex = Math.floor(displayIndex / 9);
+                    // 只在每行第一个元素时创建行容器
+                    if (displayIndex % 9 === 0) {
+                        const row = document.createElement('div');
+                        row.className = 'blueprint-9x4-row';
+                        cardsLayout.appendChild(row);
+                    }
+                    // 添加到当前行
+                    const rows = cardsLayout.querySelectorAll('.blueprint-9x4-row');
+                    rows[rowIndex].appendChild(cardElement);
+                } else if (currentLayout === 'search') {
+                    const rows = cardsLayout.querySelectorAll('.search-row');
+                    if (displayIndex < 2) {
+                        rows[0].appendChild(cardElement);
+                    } else {
+                        rows[1].appendChild(cardElement);
+                    }
+                } else if (currentLayout === 'choice') {
+                    // 二选一牌阵的卡牌添加到对应的选择容器中
+                    const choiceColumns = cardsLayout.querySelectorAll('.choice-column');
+                    if (displayIndex < 2) {
+                        // 添加到第一个选择
+                        choiceColumns[0].querySelector('.choice-cards').appendChild(cardElement);
+                    } else {
+                        // 添加到第二个选择
+                        choiceColumns[1].querySelector('.choice-cards').appendChild(cardElement);
+                    }
+                } else {
+                    cardsLayout.appendChild(cardElement);
+                }
+                
+                // 存储卡牌含义数据
+                cardElement.querySelector('.card-flip').setAttribute('data-card-meaning', card.meaning);
+                cardElement.querySelector('.card-flip').setAttribute('data-card-name', card.name);
+            });
+            
+            // 为大蓝图牌阵添加组标题
+            if (currentLayout === 'blueprint' || currentLayout === 'blueprint9x4') {
+                let groupTitles, rowCount;
+                
+                if (currentLayout === 'blueprint') {
+                    // 原始大蓝图的组标题
+                    groupTitles = [
+                        {text: "第1-8宫", position: "absolute top-0 left-0"},
+                        {text: "第9-16宫", position: "absolute top-0 left-0"},
+                        {text: "第17-24宫", position: "absolute top-0 left-0"},
+                        {text: "第25-32宫", position: "absolute top-0 left-0"},
+                        {text: "第33-36宫", position: "absolute top-0 left-0"}
+                    ];
+                    rowCount = 5;
+                } else {
+                    // 9×4大蓝图的组标题
+                    groupTitles = [
+                        {text: "第1-9宫", position: "absolute top-0 left-0"},
+                        {text: "第10-18宫", position: "absolute top-0 left-0"},
+                        {text: "第19-27宫", position: "absolute top-0 left-0"},
+                        {text: "第28-36宫", position: "absolute top-0 left-0"}
+                    ];
+                    rowCount = 4;
+                }
+                
+                // 为每行添加组标题
+                for(let i = 0; i < rowCount; i++) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = `absolute left-[-80px] text-secondary font-bold transform -translate-y-1/2`;
+                    titleElement.style.top = `${i * (100 / (rowCount - 1))}%`;
+                    titleElement.textContent = groupTitles[i].text;
+                    cardsLayout.appendChild(titleElement);
+                }
+            }
+            
+            // 添加卡牌翻转动画
+            setTimeout(() => {
+                const cardFlips = document.querySelectorAll('.card-flip');
+                // 控制翻转速度，卡牌越多翻转越慢但总时间控制在合理范围内
+                const delayBetweenCards = Math.min(300, 3000 / cardFlips.length);
+                
+                cardFlips.forEach((card, index) => {
+                    // 依次翻转卡牌，增加动画效果
+                    setTimeout(() => {
+                        card.classList.add('flipped');
+                        
+                        // 最后一张牌翻转后显示解读
+                        if (index === cardFlips.length - 1) {
+                            setTimeout(showInterpretation, 1000);
+                        }
+                    }, index * delayBetweenCards);
+                });
+            }, 500);
+        }
+        
+        // 显示解牌结果
+        function showInterpretation() {
+            const flippedCards = document.querySelectorAll('.card-flip.flipped');
+            let interpretationHTML = '';
+            
+            // 根据不同牌阵生成不同的解读格式
+            if (currentLayout === 'choice') {
+                interpretationHTML += '<h4 class="text-lg mb-3 text-secondary">选择一分析：</h4>';
+                interpretationHTML += '<ul class="mb-4 space-y-2">';
+                interpretationHTML += `<li class="flex items-start"><span class="font-bold mr-2">${flippedCards[0].getAttribute('data-card-name')}：</span><span>${flippedCards[0].getAttribute('data-card-meaning')}</span></li>`;
+                interpretationHTML += `<li class="flex items-start"><span class="font-bold mr-2">${flippedCards[1].getAttribute('data-card-name')}：</span><span>${flippedCards[1].getAttribute('data-card-meaning')}</span></li>`;
+                interpretationHTML += '</ul>';
+                
+                interpretationHTML += '<h4 class="text-lg mb-3 text-secondary">选择二分析：</h4>';
+                interpretationHTML += '<ul class="mb-4 space-y-2">';
+                interpretationHTML += `<li class="flex items-start"><span class="font-bold mr-2">${flippedCards[2].getAttribute('data-card-name')}：</span><span>${flippedCards[2].getAttribute('data-card-meaning')}</span></li>`;
+                interpretationHTML += `<li class="flex items-start"><span class="font-bold mr-2">${flippedCards[3].getAttribute('data-card-name')}：</span><span>${flippedCards[3].getAttribute('data-card-meaning')}</span></li>`;
+                interpretationHTML += '</ul>';
+                
+                interpretationHTML += '<p class="mt-4">综合来看，两张牌阵分别展示了两个选择的可能发展和结果，可根据自身情况做出更适合的决定。</p>';
+            } else if (currentLayout === 'blueprint' || currentLayout === 'blueprint9x4') {
+                // 大蓝图牌阵解读（两种布局共用相同解读逻辑）
+                let groupCount, groupSize, groupTitleFormat;
+                
+                if (currentLayout === 'blueprint') {
+                    // 原始大蓝图分组：前4组每组8张，最后1组4张
+                    groupCount = 5;
+                    groupSize = 8;
+                    groupTitleFormat = (start, end) => `第${start+1}-${end}宫`;
+                } else {
+                    // 9×4大蓝图分组：每组9张，共4组
+                    groupCount = 4;
+                    groupSize = 9;
+                    groupTitleFormat = (start, end) => `第${start+1}-${end}宫`;
+                }
+                
+                for(let group = 0; group < groupCount; group++) {
+                    const start = group * groupSize;
+                    let end = start + groupSize;
+                    
+                    // 调整最后一组的结束索引
+                    if (group === groupCount - 1 && end > 36) {
+                        end = 36;
+                    }
+                    
+                    const groupTitle = groupTitleFormat(start, end);
+                    
+                    interpretationHTML += `<div class="mb-6"><h4 class="text-lg mb-3 text-secondary">${groupTitle}：</h4>`;
+                    interpretationHTML += '<ul class="space-y-2">';
+                    
+                    for(let i = start; i < end && i < 36; i++) {
+                        interpretationHTML += `<li class="flex items-start">
+                            <span class="text-secondary mr-2">${blueprintLabels[i]}：</span>
+                            <span>${flippedCards[i].getAttribute('data-card-meaning')}</span>
+                        </li>`;
+                    }
+                    
+                    interpretationHTML += '</ul></div>';
+                }
+                
+                interpretationHTML += '<p class="mt-4">大蓝图牌阵全面展示了你生活各个方面的状况和潜力。每宫代表不同的生活领域和人生面向，共同构成了你的生命蓝图。</p>';
+            } else if (currentLayout === '3' || currentLayout === '3linear') {
+                interpretationHTML += '<ul class="space-y-4">';
+                flippedCards.forEach((card, index) => {
+                    let label = '';
+                    if (currentLayout === '3') {
+                        const labels = ['过去', '现在', '未来'];
+                        label = `<span class="text-secondary mr-2">${labels[index]}：</span>`;
+                    } else if (currentLayout === '3linear') {
+                        const labels = ['起因', '发展', '结果'];
+                        label = `<span class="text-secondary mr-2">${labels[index]}：</span>`;
+                    }
+                    interpretationHTML += `<li class="flex flex-col">${label}<span class="font-bold">${card.getAttribute('data-card-name')}：</span><span>${card.getAttribute('data-card-meaning')}</span></li>`;
+                });
+                interpretationHTML += '</ul>';
+                
+                if (currentLayout === '3linear') {
+                    interpretationHTML += '<p class="mt-4">这三张牌描绘了事件从起因到结果的完整发展过程，帮助你理解事情的来龙去脉和可能的结局。</p>';
+                } else {
+                    interpretationHTML += '<p class="mt-4">这些卡牌共同描绘了一个完整的图景，展示了事件的来龙去脉和可能的发展方向。</p>';
+                }
+            } else if (currentLayout === '6') {
+                interpretationHTML += '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">';
+                interpretationHTML += '<div><h4 class="text-md mb-2 text-secondary">影响因素：</h4>';
+                const factorLabels = ['环境因素', '内在因素', '外部影响'];
+                for(let i = 0; i < 3; i++) {
+                    interpretationHTML += `<p class="mb-2"><span class="font-bold">${factorLabels[i]}：${flippedCards[i].getAttribute('data-card-name')}</span><br>${flippedCards[i].getAttribute('data-card-meaning')}</p>`;
+                }
+                interpretationHTML += '</div>';
+                
+                interpretationHTML += '<div><h4 class="text-md mb-2 text-secondary">发展趋势：</h4>';
+                const trendLabels = ['挑战', '机遇', '可能结果'];
+                for(let i = 3; i < 6; i++) {
+                    interpretationHTML += `<p class="mb-2"><span class="font-bold">${trendLabels[i-3]}：${flippedCards[i].getAttribute('data-card-name')}</span><br>${flippedCards[i].getAttribute('data-card-meaning')}</p>`;
+                }
+                interpretationHTML += '</div>';
+                interpretationHTML += '</div>';
+                
+                interpretationHTML += '<p class="mt-4">6张牌阵从多个维度分析了你的问题，展示了各种影响因素以及可能面临的挑战和机遇，帮助你全面了解情况。</p>';
+            } else if (currentLayout === '9grid') {
+                interpretationHTML += '<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">';
+                interpretationHTML += '<div>';
+                const col1Labels = ['过去影响', '挑战', '外部因素'];
+                for(let i = 0; i < 9; i += 3) {
+                    interpretationHTML += `<p class="mb-3"><span class="text-secondary">${col1Labels[i/3]}：</span><br><span class="font-bold">${flippedCards[i].getAttribute('data-card-name')}</span><br>${flippedCards[i].getAttribute('data-card-meaning')}</p>`;
+                }
+                interpretationHTML += '</div>';
+                
+                interpretationHTML += '<div>';
+                const col2Labels = ['当前状况', '核心问题', '内在因素'];
+                for(let i = 1; i < 9; i += 3) {
+                    interpretationHTML += `<p class="mb-3"><span class="text-secondary">${col2Labels[(i-1)/3]}：</span><br><span class="font-bold">${flippedCards[i].getAttribute('data-card-name')}</span><br>${flippedCards[i].getAttribute('data-card-meaning')}</p>`;
+                }
+                interpretationHTML += '</div>';
+                
+                interpretationHTML += '<div>';
+                const col3Labels = ['未来趋势', '机遇', '可能结果'];
+                for(let i = 2; i < 9; i += 3) {
+                    interpretationHTML += `<p class="mb-3"><span class="text-secondary">${col3Labels[(i-2)/3]}：</span><br><span class="font-bold">${flippedCards[i].getAttribute('data-card-name')}</span><br>${flippedCards[i].getAttribute('data-card-meaning')}</p>`;
+                }
+                interpretationHTML += '</div>';
+                interpretationHTML += '</div>';
+                
+                interpretationHTML += '<p class="mt-4">九宫格牌阵提供了问题的全方位分析，从过去影响到未来趋势，从外部环境到内在因素，帮助你全面理解当前局面和可能的发展。</p>';
+            } else if (currentLayout === 'cross') {
+                interpretationHTML += '<ul class="space-y-4">';
+                const crossLabels = ['核心问题', '上方影响（外部因素）', '下方基础（根本原因）', '左侧阻碍（挑战）', '右侧机遇（可能性）'];
+                flippedCards.forEach((card, index) => {
+                    interpretationHTML += `<li class="flex flex-col">
+                        <span class="text-secondary mr-2">${crossLabels[index]}：</span>
+                        <span class="font-bold">${card.getAttribute('data-card-name')}：</span>
+                        <span>${card.getAttribute('data-card-meaning')}</span>
+                    </li>`;
+                });
+                interpretationHTML += '</ul>';
+                
+                interpretationHTML += '<p class="mt-4">十字牌阵的中心牌揭示了问题的核心本质，周围的牌则展示了各种影响因素、潜在挑战和可能的机遇，帮助你全面理解当前局面。</p>';
+            } else if (currentLayout === 'search' || currentLayout === 'searchdetailed') {
+                if (currentLayout === 'search') {
+                    interpretationHTML += '<ul class="space-y-4">';
+                    const searchLabels = ['物品状态', '大致位置', '相关线索', '找回可能性'];
+                    flippedCards.forEach((card, index) => {
+                        interpretationHTML += `<li class="flex flex-col">
+                            <span class="text-secondary mr-2">${searchLabels[index]}：</span>
+                            <span class="font-bold">${card.getAttribute('data-card-name')}：</span>
+                            <span>${card.getAttribute('data-card-meaning')}</span>
+                        </li>`;
+                    });
+                    interpretationHTML += '</ul>';
+                } else {
+                    interpretationHTML += '<ul class="space-y-4">';
+                    const searchDetailedLabels = ['中心区域', '上方', '下方', '左侧', '右侧', '前方', '后方'];
+                    flippedCards.forEach((card, index) => {
+                        interpretationHTML += `<li class="flex flex-col">
+                            <span class="text-secondary mr-2">${searchDetailedLabels[index]}：</span>
+                            <span class="font-bold">${card.getAttribute('data-card-name')}：</span>
+                            <span>${card.getAttribute('data-card-meaning')}</span>
+                        </li>`;
+                    });
+                    interpretationHTML += '</ul>';
+                }
+                
+                interpretationHTML += '<p class="mt-4">这些牌提示了遗失物品的可能位置和状态。结合这些线索进行寻找，可能会提高找回物品的几率。</p>';
+                interpretationHTML += '<p class="mt-2">例如，"房子"可能暗示物品在家中，"书"可能暗示在书籍附近，"花园"可能暗示在户外，"塔"可能暗示在高处等。</p>';
+            } else {
+                // 单张、五张牌阵的通用解读格式
+                interpretationHTML += '<ul class="space-y-3">';
+                flippedCards.forEach(card => {
+                    interpretationHTML += `<li class="flex items-start"><span class="font-bold mr-2">${card.getAttribute('data-card-name')}：</span><span>${card.getAttribute('data-card-meaning')}</span></li>`;
+                });
+                interpretationHTML += '</ul>';
+                
+                if (currentLayout === '1') {
+                    interpretationHTML += '<p class="mt-4">这张牌直接回应了你的问题，提供了明确的指引和启示。</p>';
+                } else if (currentLayout === '2') {
+                    interpretationHTML += '<p class="mt-4">这两张牌展示了问题的两个方面或不同角度，综合来看能帮助你更全面地理解情况。</p>';
+                } else if (currentLayout === '5') {
+                    interpretationHTML += '<p class="mt-4">这五张牌从多个维度分析了你的问题，提供了全面而深入的洞察。</p>';
+                }
+            }
+            
+            // 添加通用结尾
+            interpretationHTML += '<p class="mt-6 text-secondary italic">如需更深入的个性化解读，请联系专业占卜师获取一对一服务。</p>';
+            
+            // 显示解读结果
+            interpretation.innerHTML = interpretationHTML;
+            readingResult.classList.remove('hidden');
+            
+            // 滚动到解读结果
+            readingResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                mobileMenu.classList.add('hidden');
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
