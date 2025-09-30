@@ -52,11 +52,12 @@
             .card-back {
                 transform: rotateY(180deg);
             }
+            /* 移除滚动相关样式 */
             .cross-layout {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-template-rows: 1fr 1fr 1fr;
-                gap: 0.5rem;
+                gap: 0.3rem; /* 缩小牌之间的间隙 */
                 justify-items: center;
                 align-items: center;
                 max-width: 600px;
@@ -96,62 +97,97 @@
                 justify-content: center;
                 width: 100%;
             }
+            /* 寻物详细版布局 - 关键修改：增加行间距 */
             .search-detailed-layout {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-template-rows: 1fr 1fr 1fr;
-                gap: 1rem;
-                max-width: 800px;
+                column-gap: 0.01rem; /* 保持列间距不变 */
+                row-gap: 2rem; /* 核心修改：增加行间距，使标签之间距离变大 */
+                max-width: 400px;
                 margin: 0 auto;
             }
+            /* 优化6张牌阵布局 - 更紧凑，上下行有间隔 */
             .grid-3x2-layout {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(2, 1fr);
-                gap: 0.75rem;
-                max-width: 800px;
+                gap: 0.1rem; /* 减小列间距，更紧凑 */
+                row-gap: 1rem; /* 增加行间距 */
+                max-width: 550px; /* 缩小最大宽度 */
                 margin: 0 auto;
+                justify-items: center; /* 确保卡片居中 */
             }
+            /* 6张牌阵的标签样式，字体更小 */
+            .grid-3x2-layout .text-center {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 0.3rem; /* 减小标签与卡片间距 */
+                font-size: 0.6rem; /* 减小标签字体 */
+            }
+            /* 五张牌阵的标签样式，字体更小 */
+            .five-card-layout .text-center {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 0.3rem; /* 减小标签与卡片间距 */
+                font-size: 0.65rem; /* 五张牌阵标签字体更小 */
+            }
+            /* 九宫格牌阵优化：增加行间距和标签与牌的距离 */
             .grid-9-layout {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(3, 1fr);
-                gap: 0.5rem;
-                max-width: 600px;
+                column-gap: 0.1rem; /* 保持列间距不变 */
+                row-gap: 2rem; /* 核心修改：增加行间距 */
+                max-width: 550px; 
                 margin: 0 auto;
                 justify-items: center;
+            }
+            /* 九宫格标签与牌的距离调整 */
+            .grid-9-layout .text-center {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 0.8rem; /* 核心修改：增加标签与下方牌的距离 */
+                font-size: 0.7rem; /* 稍微增大字体以便识别 */
+            }
+            /* 优化大蓝图牌阵布局 */
+            .grand-blueprint-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 1rem;
             }
             .grand-blueprint-layout {
                 display: flex;
                 flex-direction: column;
-                gap: 1rem;
-                max-width: 1400px;
-                margin: 0 auto;
-                padding: 1rem;
+                gap: 0.5rem;
+                width: 100%;
             }
             .blueprint-row {
                 display: flex;
+                gap: 0.3rem;
+                width: 100%;
                 justify-content: center;
-                gap: 0.5rem;
+                flex-wrap: nowrap;
             }
             .blueprint-9x4-layout {
                 display: flex;
                 flex-direction: column;
-                gap: 1rem;
-                max-width: 1800px;
-                margin: 0 auto;
-                padding: 1rem;
+                gap: 0.5rem;
+                width: 100%;
             }
             .blueprint-9x4-row {
                 display: flex;
+                gap: 0.3rem;
+                width: 100%;
                 justify-content: center;
-                gap: 0.5rem;
+                flex-wrap: nowrap;
             }
             .blueprint-final-row {
                 display: flex;
+                gap: 0.3rem;
+                margin-top: 0.5rem;
+                width: 100%;
                 justify-content: center;
-                gap: 0.5rem;
-                margin-top: 1rem;
             }
             .blueprint-spacer {
                 grid-column: span 2;
@@ -159,83 +195,93 @@
             .seven-card-layout {
                 display: flex;
                 flex-direction: column;
-                gap: 1rem;
-                max-width: 1000px;
+                gap: 0.5rem;
+                max-width: 100%;
                 margin: 0 auto;
+                align-items: center;
             }
-            .seven-first-row {
+            .seven-first-row, .seven-second-row {
                 display: flex;
+                gap: 0.5rem;
                 justify-content: center;
-                gap: 1rem;
             }
-            .seven-second-row {
-                display: flex;
-                justify-content: center;
-                gap: 1rem;
-            }
+            /* 缩小卡牌尺寸，特别优化九宫格卡牌大小 */
             .card-small {
+                width: 50px;
+                height: 70px;
+            }
+            /* 九宫格专用卡牌尺寸（比默认small略小，避免遮挡） */
+            .card-9grid {
+                width: 48px;
+                height: 68px;
+            }
+            .card-medium {
                 width: 70px;
                 height: 100px;
             }
-            .card-medium {
-                width: 105px;
-                height: 150px;
-            }
             .card-large {
-                width: 140px;
-                height: 200px;
+                width: 100px;
+                height: 140px;
             }
             .card-tiny {
-                width: 63px;
-                height: 90px;
+                width: 42px;
+                height: 60px;
             }
             @media (min-width: 640px) {
                 .card-small {
-                    width: 84px;
-                    height: 120px;
+                    width: 60px;
+                    height: 85px;
+                }
+                .card-9grid {
+                    width: 55px;
+                    height: 78px;
                 }
                 .card-medium {
-                    width: 126px;
-                    height: 180px;
+                    width: 85px;
+                    height: 120px;
                 }
                 .card-large {
-                    width: 168px;
-                    height: 240px;
+                    width: 120px;
+                    height: 170px;
                 }
                 .card-tiny {
-                    width: 72px;
-                    height: 103px;
+                    width: 45px;
+                    height: 65px;
                 }
             }
             @media (min-width: 768px) {
                 .card-small {
-                    width: 105px;
-                    height: 150px;
+                    width: 70px;
+                    height: 100px;
+                }
+                .card-9grid {
+                    width: 65px;
+                    height: 92px;
                 }
                 .card-medium {
-                    width: 147px;
-                    height: 210px;
+                    width: 100px;
+                    height: 140px;
                 }
                 .card-large {
-                    width: 196px;
-                    height: 280px;
+                    width: 140px;
+                    height: 200px;
                 }
                 .card-tiny {
-                    width: 84px;
-                    height: 120px;
+                    width: 50px;
+                    height: 70px;
                 }
             }
             @media (min-width: 1024px) {
-                .card-large {
-                    width: 245px;
-                    height: 350px;
+                .card-tiny {
+                    width: 55px;
+                    height: 78px;
                 }
             }
             .choice-layout {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                max-width: 1200px;
+                max-width: 100%;
                 margin: 0 auto;
                 width: 100%;
             }
@@ -244,34 +290,70 @@
                 align-items: center;
                 justify-content: center;
                 width: 100%;
-                gap: 2rem;
-                flex-wrap: wrap;
+                gap: 0.2rem; /* 减小二选一牌阵的间隙 */
             }
-            .choice-column {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                flex: 1;
-                min-width: 240px;
-            }
-            .vs-separator {
-                font-size: 1.8rem;
-                color: #FFD700;
-                font-weight: bold;
-                padding: 0 1rem;
-                white-space: nowrap;
+          .choice-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: auto;
+    max-width: 300px;
+    padding: 0 0.5rem;
             }
             .choice-title {
                 text-align: center;
                 margin-bottom: 1rem;
-                font-size: 1.2rem;
+                font-size: 0.9rem;
                 color: #FFD700;
                 font-weight: bold;
             }
             .choice-cards {
                 display: flex;
-                gap: 1rem;
+                gap: 0.2rem; /* 减小二选一牌阵内部卡牌间隙 */
                 justify-content: center;
+            }
+            /* 宫位标签样式优化 */
+            .blueprint-label {
+                font-size: 10px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: 100%;
+            }
+            /* 36张牌阵卡牌文字缩小 */
+            .card-tiny .card-back h3 {
+                font-size: 9px !important;
+            }
+            @media (min-width: 640px) {
+                .card-tiny .card-back h3 {
+                    font-size: 10px !important;
+                }
+            }
+            @media (min-width: 768px) {
+                .card-tiny .card-back h3 {
+                    font-size: 11px !important;
+                }
+            }
+            
+            /* 统一标签样式 */
+            .three-card-labels .text-center,
+            .three-linear-labels .text-center,
+            .seven-card-labels .text-center,
+            .cross-card-labels .text-center,
+            .search-card-labels .text-center,
+            .search-detailed-labels .text-center {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 0.3rem;
+                font-size: 0.6rem;
+                display: block;
+            }
+            
+            /* 寻物详细版特定样式 */
+            .search-detailed-labels .card-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -530,7 +612,7 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-10">
                 <h2 class="text-2xl md:text-3xl font-mystical font-bold mb-4 text-secondary" id="readingTitle">单张牌阵占卜</h2>
-                <p class="max-w-2xl mx-auto" id="readingDescription">请集中注意力在你的问题上，然后点击下方按钮抽取卡牌。</p>
+                <p class="text-center mb-10" id="readingDescription">请集中注意力在你的问题上，然后点击下方按钮抽取卡牌。</p>
                 
                 <!-- 新增的问题输入框 -->
                 <div class="mt-6 max-w-2xl mx-auto">
@@ -539,11 +621,10 @@
        placeholder='请输入您的问题，请用明确的方式提出您想了解的问题，例如："我与某人的关系3个月内会如何发展？"' 
        class="w-full px-4 py-6 bg-primary/30 border border-secondary/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary text-light placeholder-light/60 text-left min-height: 100px; white-space: normal; word-wrap: break-word;">
 
-<!-- 新增样式规则，专门控制 placeholder 文字大小 -->
 <style>
   #questionInput::placeholder {
-    font-size: 13px; /* 可根据需要调整数值，如16px、12px等 */
-    vertical-align: top; /* 确保垂直顶部对齐 */
+    font-size: 13px;
+    vertical-align: top;
   }
 </style>
                     <p id="inputError" class="text-red-400 text-sm mt-1 hidden">请输入您的问题后再抽取卡牌</p>
@@ -560,7 +641,7 @@
             </div>
             
             <!-- 牌阵容器 -->
-            <div id="cardsLayout" class="flex flex-wrap justify-center gap-4 md:gap-8 my-12">
+            <div id="cardsLayout" class="my-12">
                 <!-- 卡牌将通过JS动态生成 -->
             </div>
             
@@ -774,7 +855,7 @@
             "第 19 宫：塔",
             "第 20 宫：花园",
             "第 21 宫：山",
-            "第 22 宫：十字路口",
+            "第 22 宫：路口",
             "第 23 宫：老鼠",
             "第 24 宫：心",
             "第 25 宫：戒指",
@@ -940,63 +1021,72 @@
             switch(currentLayout) {
                 case '1':
                     cardsCount = 1;
-                    layoutClass = 'justify-center';
+                    layoutClass = 'flex justify-center';
                     cardSizeClass = 'card-large';
                     break;
                 case '2':
                     cardsCount = 2;
-                    layoutClass = 'justify-center';
+                    layoutClass = 'flex justify-center gap-4 md:gap-8';
                     break;
                 case '3':
                     cardsCount = 3;
-                    layoutClass = 'justify-center';
+                    layoutClass = 'three-card-labels flex justify-center gap-4';
+                    cardSizeClass = 'card-small';
                     break;
                 case '3linear':
                     cardsCount = 3;
-                    layoutClass = 'justify-center';
+                    layoutClass = 'three-linear-labels flex justify-center gap-4';
+                    cardSizeClass = 'card-small';
                     break;
                 case '5':
                     cardsCount = 5;
-                    layoutClass = 'justify-center';
+                    layoutClass = 'five-card-layout flex justify-center gap-3 flex-wrap justify-content: center';
+                    cardSizeClass = 'card-small';
                     break;
                 case '7': // 7张牌牌阵配置 - 3+4两行排列
                     cardsCount = 7;
-                    layoutClass = 'seven-card-layout';
+                    layoutClass = 'seven-card-labels seven-card-layout';
+                    cardSizeClass = 'card-small';
                     break;
                 case '6':
                     cardsCount = 6;
                     layoutClass = 'grid-3x2-layout';
+                    cardSizeClass = 'card-small';
                     break;
                 case '9grid':
                     cardsCount = 9;
                     layoutClass = 'grid-9-layout';
-                    cardSizeClass = 'card-small';
+                    cardSizeClass = 'card-9grid'; // 使用九宫格专用尺寸
                     break;
                 case 'cross':
                     cardsCount = 5; // 十字牌阵使用5张牌
-                    layoutClass = 'cross-layout';
+                    layoutClass = 'cross-card-labels cross-layout';
+                    cardSizeClass = 'card-small';
                     break;
                 case 'choice':
                     cardsCount = 4; // 两个选择各两张牌
                     layoutClass = 'choice-layout'; // 使用横向布局类
+                    cardSizeClass = 'card-small';
                     break;
                 case 'blueprint':
                     cardsCount = 36; // 大蓝图牌阵使用36张牌
-                    layoutClass = 'grand-blueprint-layout';
-                    cardSizeClass = 'card-small';
+                    layoutClass = 'grand-blueprint-container';
+                    cardSizeClass = 'card-tiny';
                     break;
                 case 'blueprint9x4':
                     cardsCount = 36; // 9×4大蓝图牌阵使用36张牌
-                    layoutClass = 'blueprint-9x4-layout';
+                    layoutClass = 'grand-blueprint-container';
                     cardSizeClass = 'card-tiny'; // 使用更小的卡牌尺寸以适应9列布局
                     break;
                 case 'search':
                     cardsCount = 4; // 寻物牌阵使用4张牌
-                    layoutClass = 'search-layout';
+                    layoutClass = 'search-card-labels search-layout';
+                    cardSizeClass = 'card-small';
                     break;
                 case 'searchdetailed':
                     cardsCount = 7; // 寻物详细版使用7张牌
-                    layoutClass = 'search-detailed-layout';
+                    layoutClass = 'search-detailed-labels search-detailed-layout';
+                    cardSizeClass = 'card-small';
                     break;
             }
             
@@ -1008,7 +1098,21 @@
             selectedIndices = indices.slice(0, cardsCount);
             
             // 添加布局类
-            cardsLayout.className = `flex ${layoutClass} my-12`;
+            cardsLayout.className = `${layoutClass} my-12`;
+            
+            // 创建大蓝图的内部容器
+            let containerElement = cardsLayout;
+            if (currentLayout === 'blueprint') {
+                const innerContainer = document.createElement('div');
+                innerContainer.className = 'grand-blueprint-layout';
+                containerElement.appendChild(innerContainer);
+                containerElement = innerContainer;
+            } else if (currentLayout === 'blueprint9x4') {
+                const innerContainer = document.createElement('div');
+                innerContainer.className = 'blueprint-9x4-layout';
+                containerElement.appendChild(innerContainer);
+                containerElement = innerContainer;
+            }
             
             // 创建卡牌元素
             selectedIndices.forEach((cardIndex, displayIndex) => {
@@ -1030,12 +1134,12 @@
                         // 创建第一行（3张牌）
                         const firstRow = document.createElement('div');
                         firstRow.className = 'seven-first-row';
-                        cardsLayout.appendChild(firstRow);
+                        containerElement.appendChild(firstRow);
                     } else if (displayIndex === 3) {
                         // 创建第二行（4张牌）
                         const secondRow = document.createElement('div');
                         secondRow.className = 'seven-second-row';
-                        cardsLayout.appendChild(secondRow);
+                        containerElement.appendChild(secondRow);
                     }
                 } else if (currentLayout === 'search') {
                     // 寻物牌阵使用两行布局
@@ -1044,7 +1148,7 @@
                         if (displayIndex === 0) {
                             const row = document.createElement('div');
                             row.className = 'search-row';
-                            cardsLayout.appendChild(row);
+                            containerElement.appendChild(row);
                         }
                         positionClass = '';
                     } else {
@@ -1052,7 +1156,7 @@
                         if (displayIndex === 2) {
                             const row = document.createElement('div');
                             row.className = 'search-row';
-                            cardsLayout.appendChild(row);
+                            containerElement.appendChild(row);
                         }
                         positionClass = '';
                     }
@@ -1069,7 +1173,7 @@
                     }
                 }
                 
-                // 卡牌标签 - 7张牌使用第1张至第7张的命名
+                // 卡牌标签
                 let label = '';
                 if (currentLayout === 'choice') {
                     // 二选一牌阵的标签处理
@@ -1083,25 +1187,19 @@
                         option1.className = 'choice-column';
                         option1.innerHTML = '<div class="choice-title">选择一</div><div class="choice-cards"></div>';
                         
-                        // 创建VS分隔符
-                        const vsSeparator = document.createElement('div');
-                        vsSeparator.className = 'vs-separator';
-                        vsSeparator.innerHTML = '<i class="fa fa-vs"></i> VS <i class="fa fa-vs"></i>';
-                        
-                        // 创建第二个选择的容器
+                        // 创建第二个选择的容器（无VS分隔符）
                         const option2 = document.createElement('div');
                         option2.className = 'choice-column';
                         option2.innerHTML = '<div class="choice-title">选择二</div><div class="choice-cards"></div>';
                         
                         // 组合起来
                         mainRow.appendChild(option1);
-                        mainRow.appendChild(vsSeparator);
                         mainRow.appendChild(option2);
-                        cardsLayout.appendChild(mainRow);
+                        containerElement.appendChild(mainRow);
                     }
                 } else if (currentLayout === 'blueprint' || currentLayout === 'blueprint9x4') {
-                    // 大蓝图牌阵使用指定的宫位标签
-                    label = `<div class="text-center text-xs mb-1">${blueprintLabels[displayIndex]}</div>`;
+                    // 大蓝图牌阵使用指定的宫位标签，优化显示
+                    label = `<div class="text-center blueprint-label mb-1">${blueprintLabels[displayIndex]}</div>`;
                 } else if (currentLayout === '3') {
                     const timeLabels = ['第1张', '第2张', '第3张'];
                     label = `<div class="text-center mb-2">${timeLabels[displayIndex]}</div>`;
@@ -1132,10 +1230,13 @@
                 } else if (currentLayout === 'searchdetailed') {
                     const searchDetailedLabels = ['中心区域', '上方', '下方', '左侧', '右侧', '前方', '后方'];
                     label = `<div class="text-center mb-2">${searchDetailedLabels[displayIndex]}</div>`;
+                } else if (currentLayout === '5') {
+                    const fiveCardLabels = ['现状', '挑战', '机遇', '影响因素', '可能结果'];
+                    label = `<div class="text-center mb-2">${fiveCardLabels[displayIndex]}</div>`;
                 }
                 
                 const cardElement = document.createElement('div');
-                cardElement.className = `card-container relative ${positionClass}`;
+                cardElement.className = `card-container relative ${positionClass} flex-shrink-0`;
                 cardElement.innerHTML = `
                     ${label}
                     <div class="card-flip ${cardSizeClass} relative cursor-pointer" data-card-index="${displayIndex}">
@@ -1167,20 +1268,20 @@
                         if (displayIndex % 8 === 0) {
                             const row = document.createElement('div');
                             row.className = 'blueprint-row';
-                            cardsLayout.appendChild(row);
+                            containerElement.appendChild(row);
                         }
                         // 添加到当前行
-                        const rows = cardsLayout.querySelectorAll('.blueprint-row');
+                        const rows = containerElement.querySelectorAll('.blueprint-row');
                         rows[rowIndex].appendChild(cardElement);
                     } else {
                         // 处理最后4张牌，创建专用容器
                         if (displayIndex === 32) {
                             const finalRow = document.createElement('div');
                             finalRow.className = 'blueprint-final-row';
-                            cardsLayout.appendChild(finalRow);
+                            containerElement.appendChild(finalRow);
                         }
                         // 添加到最后一行容器
-                        const finalRow = cardsLayout.querySelector('.blueprint-final-row');
+                        const finalRow = containerElement.querySelector('.blueprint-final-row');
                         finalRow.appendChild(cardElement);
                     }
                 } else if (currentLayout === 'blueprint9x4') {
@@ -1190,13 +1291,13 @@
                     if (displayIndex % 9 === 0) {
                         const row = document.createElement('div');
                         row.className = 'blueprint-9x4-row';
-                        cardsLayout.appendChild(row);
+                        containerElement.appendChild(row);
                     }
                     // 添加到当前行
-                    const rows = cardsLayout.querySelectorAll('.blueprint-9x4-row');
+                    const rows = containerElement.querySelectorAll('.blueprint-9x4-row');
                     rows[rowIndex].appendChild(cardElement);
                 } else if (currentLayout === 'search') {
-                    const rows = cardsLayout.querySelectorAll('.search-row');
+                    const rows = containerElement.querySelectorAll('.search-row');
                     if (displayIndex < 2) {
                         rows[0].appendChild(cardElement);
                     } else {
@@ -1204,7 +1305,7 @@
                     }
                 } else if (currentLayout === 'choice') {
                     // 二选一牌阵的卡牌添加到对应的选择容器中
-                    const choiceColumns = cardsLayout.querySelectorAll('.choice-column');
+                    const choiceColumns = containerElement.querySelectorAll('.choice-column');
                     if (displayIndex < 2) {
                         // 添加到第一个选择
                         choiceColumns[0].querySelector('.choice-cards').appendChild(cardElement);
@@ -1214,7 +1315,7 @@
                     }
                 } else if (currentLayout === '7') {
                     // 7张牌阵添加到对应的行容器中
-                    const rows = cardsLayout.querySelectorAll('.seven-first-row, .seven-second-row');
+                    const rows = containerElement.querySelectorAll('.seven-first-row, .seven-second-row');
                     if (displayIndex < 3) {
                         // 前3张添加到第一行
                         rows[0].appendChild(cardElement);
@@ -1223,7 +1324,7 @@
                         rows[1].appendChild(cardElement);
                     }
                 } else {
-                    cardsLayout.appendChild(cardElement);
+                    containerElement.appendChild(cardElement);
                 }
                 
                 // 存储卡牌含义数据
@@ -1233,7 +1334,7 @@
             
             // 为大蓝图牌阵添加组标题
             if (currentLayout === 'blueprint' || currentLayout === 'blueprint9x4') {
-                let groupTitles, rowCount;
+                let groupCount, groupTitleFormat;
                 
                 if (currentLayout === 'blueprint') {
                     // 原始大蓝图的组标题
@@ -1244,7 +1345,7 @@
                         {text: "第25-32宫", position: "absolute top-0 left-0"},
                         {text: "第33-36宫", position: "absolute top-0 left-0"}
                     ];
-                    rowCount = 5;
+                    groupCount = 5;
                 } else {
                     // 9×4大蓝图的组标题
                     groupTitles = [
@@ -1253,16 +1354,16 @@
                         {text: "第19-27宫", position: "absolute top-0 left-0"},
                         {text: "第28-36宫", position: "absolute top-0 left-0"}
                     ];
-                    rowCount = 4;
+                    groupCount = 4;
                 }
                 
                 // 为每行添加组标题
-                for(let i = 0; i < rowCount; i++) {
+                for(let i = 0; i < groupCount; i++) {
                     const titleElement = document.createElement('div');
                     titleElement.className = `absolute left-[-80px] text-secondary font-bold transform -translate-y-1/2`;
-                    titleElement.style.top = `${i * (100 / (rowCount - 1))}%`;
+                    titleElement.style.top = `${i * (100 / (groupCount - 1))}%`;
                     titleElement.textContent = groupTitles[i].text;
-                    cardsLayout.appendChild(titleElement);
+                    containerElement.appendChild(titleElement);
                 }
             }
             
@@ -1372,7 +1473,7 @@
                 }
             } else if (currentLayout === '6') {
                 interpretationHTML += '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">';
-                interpretationHTML += '<div><h4 class="text-md mb-2 text-secondary">影响因素：</h4>';
+                interpretationHTML += '<div><h4 class="text-md mb-2 text-secondary">环境因素：</h4>';
                 const factorLabels = ['环境因素', '内在因素', '外部影响'];
                 for(let i = 0; i < 3; i++) {
                     interpretationHTML += `<p class="mb-2"><span class="font-bold">${factorLabels[i]}：${flippedCards[i].getAttribute('data-card-name')}</span><br>${flippedCards[i].getAttribute('data-card-meaning')}</p>`;
@@ -1465,8 +1566,22 @@
                 
                 interpretationHTML += '<p class="mt-4">这些牌提示了遗失物品的可能位置和状态。结合这些线索进行寻找，可能会提高找回物品的几率。</p>';
                 interpretationHTML += '<p class="mt-2">例如，"房子"可能暗示物品在家中，"书"可能暗示在书籍附近，"花园"可能暗示在户外，"塔"可能暗示在高处等。</p>';
+            } else if (currentLayout === '5') {
+                // 五张牌阵解读
+                interpretationHTML += '<ul class="space-y-4">';
+                const fiveCardLabels = ['现状', '挑战', '机遇', '影响因素', '可能结果'];
+                flippedCards.forEach((card, index) => {
+                    interpretationHTML += `<li class="flex flex-col">
+                        <span class="text-secondary mr-2">${fiveCardLabels[index]}：</span>
+                        <span class="font-bold">${card.getAttribute('data-card-name')}：</span>
+                        <span>${card.getAttribute('data-card-meaning')}</span>
+                    </li>`;
+                });
+                interpretationHTML += '</ul>';
+                
+                interpretationHTML += '<p class="mt-4">五张牌阵从现状、挑战、机遇、影响因素和可能结果五个维度全面分析了你的问题，提供了深入的洞察和指引。</p>';
             } else {
-                // 单张、五张牌阵的通用解读格式
+                // 单张、两张牌阵的通用解读格式
                 interpretationHTML += '<ul class="space-y-3">';
                 flippedCards.forEach(card => {
                     interpretationHTML += `<li class="flex items-start"><span class="font-bold mr-2">${card.getAttribute('data-card-name')}：</span><span>${card.getAttribute('data-card-meaning')}</span></li>`;
@@ -1477,8 +1592,6 @@
                     interpretationHTML += '<p class="mt-4">这张牌直接回应了你的问题，提供了明确的指引和启示。</p>';
                 } else if (currentLayout === '2') {
                     interpretationHTML += '<p class="mt-4">这两张牌展示了问题的两个方面或不同角度，综合来看能帮助你更全面地理解情况。</p>';
-                } else if (currentLayout === '5') {
-                    interpretationHTML += '<p class="mt-4">这五张牌从多个维度分析了你的问题，提供了全面而深入的洞察。</p>';
                 }
             }
             
