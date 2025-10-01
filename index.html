@@ -961,7 +961,7 @@
                     readingDescription.textContent = '这三张牌将展示事件的起因、发展过程和最终结果。';
                     break;
                 case '5':
-                    readingTitle.textContent = '五张牌阵占卜';
+                    readingTitle.textContent = '五张线性牌阵占卜';
                     readingDescription.textContent = '这五张牌将从多个角度分析你的问题，提供全面的指引。';
                     break;
                 case '7': // 新增7张牌牌阵
@@ -1240,7 +1240,7 @@
                     const searchDetailedLabels = ['中心区域', '上方', '下方', '左侧', '右侧', '前方', '后方'];
                     label = `<div class="text-center mb-2">${searchDetailedLabels[displayIndex]}</div>`;
                 } else if (currentLayout === '5') {
-                    const fiveCardLabels = ['现状', '挑战', '机遇', '影响因素', '可能结果'];
+                    const fiveCardLabels = ['第1张（现状）', '第2张（挑战）', '第3张（机遇）', '第4张（影响因素）', '第5张（可能结果）'];
                     label = `<div class="text-center mb-2">${fiveCardLabels[displayIndex]}</div>`;
                 }
                 
