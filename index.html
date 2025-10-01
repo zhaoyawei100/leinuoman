@@ -137,7 +137,7 @@
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(3, 1fr);
                 column-gap: 0.02rem; /* 列间距不变 */
-                row-gap: 2rem; /* 增加行间距，使牌下方空间更大 */
+                row-gap: 2rem; /* 九宫格行间距 */
                 max-width: 350px;
                 margin: 0 auto;
                 justify-items: center;
@@ -156,7 +156,7 @@
                 font-size: 0.6rem;
                 display: block;
             }
-            /* 大蓝图牌阵布局 */
+            /* 大蓝图牌阵布局 - 行间距调整为与九宫格一致 */
             .grand-blueprint-container {
                 max-width: 1200px;
                 margin: 0 auto;
@@ -165,7 +165,7 @@
             .grand-blueprint-layout {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: 2rem; /* 大蓝图行间距调整为与九宫格相同的2rem */
                 width: 100%;
             }
             .blueprint-row {
@@ -178,7 +178,7 @@
             .blueprint-9x4-layout {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: 2rem; /* 大蓝图行间距调整为与九宫格相同的2rem */
                 width: 100%;
             }
             .blueprint-9x4-row {
@@ -191,7 +191,7 @@
             .blueprint-final-row {
                 display: flex;
                 gap: 0.3rem;
-                margin-top: 0.5rem;
+                margin-top: 0.1rem; /* 大蓝图最后一行上边距调整为与九宫格相同的2rem */
                 width: 100%;
                 justify-content: center;
             }
@@ -319,10 +319,16 @@
             }
             .blueprint-label {
                 font-size: 10px;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
+                text-align: center; /* 居中显示 */
                 max-width: 100%;
+                line-height: 1.2; /* 调整行高 */
+            }
+            .blueprint-label .宫位 {
+                font-weight: bold;
+                display: block; /* 宫位单独一行 */
+            }
+            .blueprint-label .牌名 {
+                display: block; /* 牌名单独一行 */
             }
             .card-tiny .card-back h3 {
                 font-size: 9px !important;
@@ -832,44 +838,44 @@
             "https://www.taluowa.com/lenormand/36.jpg"
         ];
 
-        // 大蓝图牌阵的宫位标签
+        // 大蓝图牌阵的宫位标签（拆分为宫位和牌名两部分）
         const blueprintLabels = [
-            "第 1 宫：骑士",
-            "第 2 宫：四叶草",
-            "第 3 宫：船",
-            "第 4 宫：房屋",
-            "第 5 宫：树",
-            "第 6 宫：云",
-            "第 7 宫：蛇",
-            "第 8 宫：棺材",
-            "第 9 宫：花束",
-            "第 10 宫：镰刀",
-            "第 11 宫：鞭子",
-            "第 12 宫：鸟",
-            "第 13 宫：小孩",
-            "第 14 宫：狐狸",
-            "第 15 宫：熊",
-            "第 16 宫：星星",
-            "第 17 宫：鹳鸟",
-            "第 18 宫：狗",
-            "第 19 宫：塔",
-            "第 20 宫：花园",
-            "第 21 宫：山",
-            "第 22 宫：路口",
-            "第 23 宫：老鼠",
-            "第 24 宫：心",
-            "第 25 宫：戒指",
-            "第 26 宫：书籍",
-            "第 27 宫：信件",
-            "第 28 宫：男人",
-            "第 29 宫：女人",
-            "第 30 宫：百合",
-            "第 31 宫：太阳",
-            "第 32 宫：月亮",
-            "第 33 宫：钥匙",
-            "第 34 宫：鱼",
-            "第 35 宫：船锚",
-            "第 36 宫：十字架"
+            {宫位: "第 1 宫", 牌名: "骑士"},
+            {宫位: "第 2 宫", 牌名: "四叶草"},
+            {宫位: "第 3 宫", 牌名: "船"},
+            {宫位: "第 4 宫", 牌名: "房屋"},
+            {宫位: "第 5 宫", 牌名: "树"},
+            {宫位: "第 6 宫", 牌名: "云"},
+            {宫位: "第 7 宫", 牌名: "蛇"},
+            {宫位: "第 8 宫", 牌名: "棺材"},
+            {宫位: "第 9 宫", 牌名: "花束"},
+            {宫位: "第 10 宫", 牌名: "镰刀"},
+            {宫位: "第 11 宫", 牌名: "鞭子"},
+            {宫位: "第 12 宫", 牌名: "鸟"},
+            {宫位: "第 13 宫", 牌名: "小孩"},
+            {宫位: "第 14 宫", 牌名: "狐狸"},
+            {宫位: "第 15 宫", 牌名: "熊"},
+            {宫位: "第 16 宫", 牌名: "星星"},
+            {宫位: "第 17 宫", 牌名: "鹳鸟"},
+            {宫位: "第 18 宫", 牌名: "狗"},
+            {宫位: "第 19 宫", 牌名: "塔"},
+            {宫位: "第 20 宫", 牌名: "花园"},
+            {宫位: "第 21 宫", 牌名: "山"},
+            {宫位: "第 22 宫", 牌名: "路口"},
+            {宫位: "第 23 宫", 牌名: "老鼠"},
+            {宫位: "第 24 宫", 牌名: "心"},
+            {宫位: "第 25 宫", 牌名: "戒指"},
+            {宫位: "第 26 宫", 牌名: "书籍"},
+            {宫位: "第 27 宫", 牌名: "信件"},
+            {宫位: "第 28 宫", 牌名: "男人"},
+            {宫位: "第 29 宫", 牌名: "女人"},
+            {宫位: "第 30 宫", 牌名: "百合"},
+            {宫位: "第 31 宫", 牌名: "太阳"},
+            {宫位: "第 32 宫", 牌名: "月亮"},
+            {宫位: "第 33 宫", 牌名: "钥匙"},
+            {宫位: "第 34 宫", 牌名: "鱼"},
+            {宫位: "第 35 宫", 牌名: "船锚"},
+            {宫位: "第 36 宫", 牌名: "十字架"}
         ];
 
         // DOM元素
@@ -1198,8 +1204,11 @@
                         containerElement.appendChild(mainRow);
                     }
                 } else if (currentLayout === 'blueprint' || currentLayout === 'blueprint9x4') {
-                    // 大蓝图牌阵使用指定的宫位标签，优化显示
-                    label = `<div class="text-center blueprint-label mb-1">${blueprintLabels[displayIndex]}</div>`;
+                    // 大蓝图牌阵使用指定的宫位标签，优化为两行显示
+                    label = `<div class="blueprint-label mb-1">
+                                <span class="宫位">${blueprintLabels[displayIndex].宫位}</span>
+                                <span class="牌名">${blueprintLabels[displayIndex].牌名}</span>
+                            </div>`;
                 } else if (currentLayout === '3') {
                     const timeLabels = ['第1张', '第2张', '第3张'];
                     label = `<div class="text-center mb-2">${timeLabels[displayIndex]}</div>`;
@@ -1442,7 +1451,7 @@
                     
                     for(let i = start; i < end && i < 36; i++) {
                         interpretationHTML += `<li class="flex items-start">
-                            <span class="text-secondary mr-2">${blueprintLabels[i]}：</span>
+                            <span class="text-secondary mr-2">${blueprintLabels[i].宫位} ${blueprintLabels[i].牌名}：</span>
                             <span>${flippedCards[i].getAttribute('data-card-meaning')}</span>
                         </li>`;
                     }
