@@ -52,15 +52,16 @@
             .card-back {
                 transform: rotateY(180deg);
             }
-            /* 移除滚动相关样式 */
+            /* 十字牌阵布局 - 调整行间距 */
             .cross-layout {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-template-rows: 1fr 1fr 1fr;
-                gap: 0.3rem; /* 缩小牌之间的间隙 */
+                gap: 0.04rem; /* 列间距不变 */
+                row-gap: 1.5rem; /* 增加行间距，使牌下方空间更大 */
                 justify-items: center;
                 align-items: center;
-                max-width: 600px;
+                max-width: 400px;
                 margin: 0 auto;
             }
             .cross-center {
@@ -97,60 +98,65 @@
                 justify-content: center;
                 width: 100%;
             }
-            /* 寻物详细版布局 - 关键修改：增加行间距 */
+            /* 寻物详细版布局 */
             .search-detailed-layout {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-template-rows: 1fr 1fr 1fr;
-                column-gap: 0.01rem; /* 保持列间距不变 */
-                row-gap: 2rem; /* 核心修改：增加行间距，使标签之间距离变大 */
+                column-gap: 0.01rem;
+                row-gap: 2rem;
                 max-width: 400px;
                 margin: 0 auto;
             }
-            /* 优化6张牌阵布局 - 更紧凑，上下行有间隔 */
+            /* 6张牌阵布局 */
             .grid-3x2-layout {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(2, 1fr);
-                gap: 0.1rem; /* 减小列间距，更紧凑 */
-                row-gap: 1rem; /* 增加行间距 */
-                max-width: 550px; /* 缩小最大宽度 */
+                gap: 0.1rem;
+                row-gap: 1rem;
+                max-width: 550px;
                 margin: 0 auto;
-                justify-items: center; /* 确保卡片居中 */
+                justify-items: center;
             }
-            /* 6张牌阵的标签样式，字体更小 */
             .grid-3x2-layout .text-center {
                 text-align: center;
                 width: 100%;
-                margin-bottom: 0.3rem; /* 减小标签与卡片间距 */
-                font-size: 0.6rem; /* 减小标签字体 */
+                margin-bottom: 0.3rem;
+                font-size: 0.6rem;
             }
-            /* 五张牌阵的标签样式，字体更小 */
             .five-card-layout .text-center {
                 text-align: center;
                 width: 100%;
-                margin-bottom: 0.3rem; /* 减小标签与卡片间距 */
-                font-size: 0.65rem; /* 五张牌阵标签字体更小 */
+                margin-bottom: 0.3rem;
+                font-size: 0.65rem;
             }
-            /* 九宫格牌阵优化：增加行间距和标签与牌的距离 */
+            /* 九宫格牌阵优化 - 调整行间距和标签距离 */
             .grid-9-layout {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(3, 1fr);
-                column-gap: 0.1rem; /* 保持列间距不变 */
-                row-gap: 2rem; /* 核心修改：增加行间距 */
-                max-width: 550px; 
+                column-gap: 0.02rem; /* 列间距不变 */
+                row-gap: 2rem; /* 增加行间距，使牌下方空间更大 */
+                max-width: 350px;
                 margin: 0 auto;
                 justify-items: center;
             }
-            /* 九宫格标签与牌的距离调整 */
             .grid-9-layout .text-center {
                 text-align: center;
                 width: 100%;
-                margin-bottom: 0.8rem; /* 核心修改：增加标签与下方牌的距离 */
-                font-size: 0.7rem; /* 稍微增大字体以便识别 */
+                margin-bottom: 0.3rem; /* 减少标签底部距离，让标签更靠近牌 */
+                font-size: 0.7rem;
             }
-            /* 优化大蓝图牌阵布局 */
+            /* 十字牌阵标签样式调整 */
+            .cross-card-labels .text-center {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 0.3rem; /* 减少标签底部距离，让标签更靠近牌 */
+                font-size: 0.6rem;
+                display: block;
+            }
+            /* 大蓝图牌阵布局 */
             .grand-blueprint-container {
                 max-width: 1200px;
                 margin: 0 auto;
@@ -205,15 +211,14 @@
                 gap: 0.5rem;
                 justify-content: center;
             }
-            /* 缩小卡牌尺寸，特别优化九宫格卡牌大小 */
+            /* 卡牌尺寸优化 */
             .card-small {
                 width: 50px;
                 height: 70px;
             }
-            /* 九宫格专用卡牌尺寸（比默认small略小，避免遮挡） */
             .card-9grid {
-                width: 48px;
-                height: 68px;
+                width: 45px;
+                height: 65px;
             }
             .card-medium {
                 width: 70px;
@@ -233,8 +238,8 @@
                     height: 85px;
                 }
                 .card-9grid {
-                    width: 55px;
-                    height: 78px;
+                    width: 52px;
+                    height: 75px;
                 }
                 .card-medium {
                     width: 85px;
@@ -255,8 +260,8 @@
                     height: 100px;
                 }
                 .card-9grid {
-                    width: 65px;
-                    height: 92px;
+                    width: 60px;
+                    height: 85px;
                 }
                 .card-medium {
                     width: 100px;
@@ -290,7 +295,7 @@
                 align-items: center;
                 justify-content: center;
                 width: 100%;
-                gap: 0.2rem; /* 减小二选一牌阵的间隙 */
+                gap: 0.2rem;
             }
           .choice-column {
     display: flex;
@@ -309,10 +314,9 @@
             }
             .choice-cards {
                 display: flex;
-                gap: 0.2rem; /* 减小二选一牌阵内部卡牌间隙 */
+                gap: 0.2rem;
                 justify-content: center;
             }
-            /* 宫位标签样式优化 */
             .blueprint-label {
                 font-size: 10px;
                 white-space: nowrap;
@@ -320,7 +324,6 @@
                 overflow: hidden;
                 max-width: 100%;
             }
-            /* 36张牌阵卡牌文字缩小 */
             .card-tiny .card-back h3 {
                 font-size: 9px !important;
             }
@@ -335,11 +338,9 @@
                 }
             }
             
-            /* 统一标签样式 */
             .three-card-labels .text-center,
             .three-linear-labels .text-center,
             .seven-card-labels .text-center,
-            .cross-card-labels .text-center,
             .search-card-labels .text-center,
             .search-detailed-labels .text-center {
                 text-align: center;
@@ -349,7 +350,6 @@
                 display: block;
             }
             
-            /* 寻物详细版特定样式 */
             .search-detailed-labels .card-container {
                 display: flex;
                 flex-direction: column;
